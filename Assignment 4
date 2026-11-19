@@ -1,1 +1,43 @@
-
+#include <stdio.h>
+int main() 
+{
+      int r,c,i,j;
+    printf("enter the number of rows and columns");
+    scanf("%d %d",&r,&c);
+    int robotic_sensor1[r][c];
+    int robotic_sensor2[r][c];
+    int robotic_sensor3[r][c];
+    printf("enter the elements of 1st sensor");
+    for(i=0;i<r;i++)
+        {
+            for(j=0;j<c;j++)
+                {
+                    scanf("%d",&robotic_sensor1[i][j]);
+                }
+        }
+     printf("enter the elements of 2st sensor");
+    for(i=0;i<r;i++)
+        {
+            for(j=0;j<c;j++)
+                {
+                    scanf("%d",&robotic_sensor2[i][j]);
+                }
+        }
+    for(i=0;i<r;i++)
+        {
+            for(j=0;j<c;j++)
+                { 
+                    robotic_sensor3[i][j]=robotic_sensor1[i][j] + robotic_sensor2[i][j];
+                }
+        }
+    printf("the addition of the sensors is");
+    for(i=0;i<r;i++)
+        {
+            for(j=0;j<c;j++)
+                { 
+                    printf("%d sum of two sensors",robotic_sensor3[i][j]);
+                }
+            printf("\n");
+        }
+    return 0;
+}
