@@ -1,1 +1,66 @@
+#include <stdio.h>
+#include <string.h>
+struct sensor {
+    int id;
+    char type[30];
+    float distance;
+    float threshold;
+    char status[30];
+    char risk[20];
+};
+int main() {
+    int n, i;
+    int high = 0, med = 0, low = 0;
+    int minIndex = 0;
+    printf("Enter total number of sensors: ");
+    scanf("%d", &n);
+    struct sensor s[n];
+    for (i = 0; i < n; i++) {
+        printf("\nEnter details for Sensor %d:\n", i + 1);
+        printf("Sensor ID: ");
+        scanf("%d", &s[i].id);
+        printf("Sensor Type: ");
+        scanf("%s", s[i].type);
+        printf("Measured Distance (cm): ");
+        scanf("%f", &s[i].distance);
+        printf("Safety Threshold (cm): ");
+        scanf("%f", &s[i].threshold);
+        if (s[i].distance <= s[i].threshold) {
+            strcpy(s[i].status, "Obstacle Detected");
+            strcpy(s[i].risk, "High Risk");
+            high++;
+        } else if (s[i].distance <= 1.5 * s[i].threshold) {
+            strcpy(s[i].status, "No Obstacle");
+            strcpy(s[i].risk, "Medium Risk");
+            med++;
+        } else {
+            strcpy(s[i].status, "No Obstacle");
+            strcpy(s[i].risk, "Low Risk");
+            low++;
+        }
+        if (s[i].distance < s[minIndex].distance) {
+            minIndex = i;
+        }
+    }
+    printf("\n-------------------------------------------------------------------------------------\n");
+    printf("%-6s %-15s %-12s %-12s %-20s %-15s\n", 
+           "ID", "Type", "Distance", "Threshold", "Status", "Risk Level");
+    printf("-------------------------------------------------------------------------------------\n");
 
+    for (i = 0; i < n; i++) {
+        printf("%-6d %-15s %-12.2f %-12.2f %-20s %-15s\n",
+               s[i].id, s[i].type, s[i].distance, s[i].threshold, s[i].status, s[i].risk);
+    }
+    printf("-------------------------------------------------------------------------------------\n");
+    printf("\n--- Risk Category Summary ---\n");
+    printf("High Risk Sensors   : %d\n", high);
+    printf("Medium Risk Sensors : %d\n", med);
+    printf("Low Risk Sensors    : %d\n", low);
+
+    printf("\n--- Nearest Obstacle Details ---\n");
+    printf("Sensor ID   : %d\n", s[minIndex].id);
+    printf("Sensor Type : %s\n", s[minIndex].type);
+    printf("Distance    : %.2f cm\n", s[minIndex].distance);
+    printf("Status      : %s (%s)\n", s[minIndex].status, s[minIndex].risk);
+    return 0;
+}
