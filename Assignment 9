@@ -1,1 +1,97 @@
-
+#include <stdio.h>
+#include <string.h>
+struct RobotRecord {
+    int id;
+    float depth;
+    float pressure;
+    float temperature;
+    float battery;
+    char defect[50];
+};
+int main() {
+    struct RobotRecord rec;
+    FILE *fp;
+    int n, i;
+    int totalRecords = 0, safeCount = 0, unsafeCount = 0, defectCount = 0;
+    fp = fopen("robot_data.txt", "a");
+    if (fp == NULL) {
+        printf("Error opening file!\n");
+        return 1;
+    }
+    printf("Enter number of new robot records to add: ");
+    scanf("%d", &n);
+    for (i = 0; i < n; i++) {
+        printf("\n--- Enter Details for Record %d ---\n", i + 1);
+        printf("Robot ID: ");
+        scanf("%d", &rec.id);
+        printf("Depth (in meters): ");
+        scanf("%f", &rec.depth);
+        printf("Water Pressure (in MPa): ");
+        scanf("%f", &rec.pressure);
+        printf("Temperature (in C): ");
+        scanf("%f", &rec.temperature);
+        printf("Battery Percentage: ");
+        scanf("%f", &rec.battery);
+        printf("Detected Defect (enter 'None' if no defect, use underscores for spaces e.g. Hull_Crack): ");
+        scanf("%s", rec.defect);
+        fprintf(fp, "%d %.2f %.2f %.2f %.2f %s\n",
+                rec.id, rec.depth, rec.pressure, rec.temperature, rec.battery, rec.defect);
+    }
+    fclose(fp);
+    fp = fopen("robot_data.txt", "r");
+    if (fp == NULL) {
+        printf("Error reading historical records!\n");
+        return 1;
+    }
+    printf("\n=========================================================================================\n");
+    printf("                        UNDERWATER ROBOT INSPECTION REPORT                               \n");
+    printf("=========================================================================================\n");
+    printf("%-6s %-10s %-11s %-10s %-10s %-15s %-10s %s\n",
+           "ID", "Depth(m)", "Press(MPa)", "Temp(C)", "Batt(%)", "Defect", "Status", "Reasons");
+    printf("-----------------------------------------------------------------------------------------\n");
+    while (fscanf(fp, "%d %f %f %f %f %s",
+                  &rec.id, &rec.depth, &rec.pressure, &rec.temperature, &rec.battery, rec.defect) != EOF) {
+        totalRecords++;
+        int isUnsafe = 0;
+        char reasons[150] = "";
+        if (rec.depth > 300.0) {
+            isUnsafe = 1;
+            strcat(reasons, "Over-depth ");
+        }
+        if (rec.pressure > 30.0) {
+            isUnsafe = 1;
+            strcat(reasons, "High-pressure ");
+        }
+        if (rec.temperature > 35.0) {
+            isUnsafe = 1;
+            strcat(reasons, "Overheating ");
+        }
+        if (rec.battery < 20.0) {
+            isUnsafe = 1;
+            strcat(reasons, "Low-battery ");
+        }
+        if (strcmp(rec.defect, "None") != 0 && strcmp(rec.defect, "none") != 0) {
+            isUnsafe = 1;
+            defectCount++; // Step 6: Count defect occurrences
+            strcat(reasons, "Defect-detected ");
+        }
+        if (isUnsafe) {
+            unsafeCount++;
+            printf("%-6d %-10.2f %-11.2f %-10.2f %-10.2f %-15s %-10s %s\n",
+                   rec.id, rec.depth, rec.pressure, rec.temperature, rec.battery, rec.defect, "UNSAFE", reasons);
+        } else {
+            safeCount++;
+            printf("%-6d %-10.2f %-11.2f %-10.2f %-10.2f %-15s %-10s %s\n",
+                   rec.id, rec.depth, rec.pressure, rec.temperature, rec.battery, rec.defect, "SAFE", "-");
+        }
+    }
+    fclose(fp);
+    printf("-----------------------------------------------------------------------------------------\n");
+    printf("SUMMARY:\n");
+    printf("Total Historical Records Processed : %d\n", totalRecords);
+    printf("Safe Operating Records             : %d\n", safeCount);
+    printf("Unsafe Operating Records           : %d\n", unsafeCount);
+    printf("Records with Structural Defects    : %d\n", defectCount);
+    printf("=========================================================================================\n");
+    return 0;
+}   
