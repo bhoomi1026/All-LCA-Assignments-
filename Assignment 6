@@ -1,1 +1,30 @@
-
+// CODE 1
+#include <stdio.h>
+int fact(int n)
+{
+    if(n==1)
+        return 1;
+    return n*fact(n-1);
+}
+int main()
+{
+    int n;
+    printf("enter the limit");
+    scanf("%d",&n);
+    printf("factorial of %d is %d",n,fact(n));
+    return 0;
+}
+// CODE 2
+#include <stdio.h>
+int main()
+{
+    int n,i,f=1;
+    printf("enter the limit");
+    scanf("%d",&n);
+    for(i=1;i<=n;i++)
+        {
+            f*=i;
+        }
+    printf("factorial of %d is %d",n,f);
+    return 0;
+}
