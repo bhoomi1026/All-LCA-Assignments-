@@ -1,1 +1,36 @@
+#include <stdio.h>
+#define PI 3.14159
 
+void findDistance(float *d, float *lRot, float *rRot,
+                  float *circ, float *lDist, float *rDist, float *tDist)
+{
+    *circ  = PI * (*d);
+    *lDist = (*lRot) * (*circ);
+    *rDist = (*rRot) * (*circ);
+    *tDist = (*lDist + *rDist) / 2.0;
+}
+
+int main()
+{
+    float diameter, leftRot, rightRot;
+    float circumference, leftDist, rightDist, totalDist;
+
+    printf("Enter wheel diameter (cm): ");
+    scanf("%f", &diameter);
+
+    printf("Enter left wheel rotations: ");
+    scanf("%f", &leftRot);
+
+    printf("Enter right wheel rotations: ");
+    scanf("%f", &rightRot);
+
+    findDistance(&diameter, &leftRot, &rightRot,
+                 &circumference, &leftDist, &rightDist, &totalDist);
+
+    printf("\nWheel Circumference: %.2f cm\n", circumference);
+    printf("Left Wheel Distance: %.2f cm\n", leftDist);
+    printf("Right Wheel Distance: %.2f cm\n", rightDist);
+    printf("Total Robot Distance: %.2f cm\n", totalDist);
+
+    return 0;
+}
